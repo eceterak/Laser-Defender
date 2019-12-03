@@ -2,19 +2,32 @@
 
 public class Enemy : MonoBehaviour
 {
+    // Config
     [SerializeField] float health = 100;
     [SerializeField] float shootCounter;
     [SerializeField] float minTimeBetweenShot = .2f;
     [SerializeField] float maxTimeBetweenShot = 2f;
     [SerializeField] float projectileSpeed = -15f;
-    [SerializeField] GameObject explosionVFX;
-    [SerializeField] AudioClip destroySound;
+    [SerializeField] [Range(0, 1)] float deathSoundVolume = .75f;
+    [SerializeField] [Range(0, 1)] float shootSoundVolume = .25f;
+    [SerializeField] int scorePoints = 100;
 
+    // VFX
+    [SerializeField] GameObject explosionVFX;
+    [SerializeField] AudioClip destroySFX;
+    [SerializeField] AudioClip shootSFX;
+
+    // Prefabs
     [SerializeField] GameObject laserPrefab;
+
+    // References
+    GameSession gameSession;
 
     private void Start()
     {
         shootCounter = Random.Range(minTimeBetweenShot, maxTimeBetweenShot);
+
+        gameSession = FindObjectOfType<GameSession>();
     }
 
     private void Update()
@@ -46,6 +59,7 @@ public class Enemy : MonoBehaviour
 
         laser.GetComponent<Rigidbody2D>().velocity = new Vector2(0,  projectileSpeed);
 
+        AudioSource.PlayClipAtPoint(shootSFX, Camera.main.transform.position, shootSoundVolume);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -75,7 +89,9 @@ public class Enemy : MonoBehaviour
 
         TriggerExplosionVFX();
 
-        AudioSource.PlayClipAtPoint(destroySound, Camera.main.transform.position);
+        AudioSource.PlayClipAtPoint(destroySFX, Camera.main.transform.position, deathSoundVolume);
+
+        gameSession.AddToScore(scorePoints);
     }
 
     private void TriggerExplosionVFX()
