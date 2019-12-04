@@ -4,13 +4,14 @@ public class Enemy : MonoBehaviour
 {
     // Config
     [SerializeField] float health = 100;
-    [SerializeField] float shootCounter;
     [SerializeField] float minTimeBetweenShot = .2f;
     [SerializeField] float maxTimeBetweenShot = 2f;
     [SerializeField] float projectileSpeed = -15f;
     [SerializeField] [Range(0, 1)] float deathSoundVolume = .75f;
     [SerializeField] [Range(0, 1)] float shootSoundVolume = .25f;
     [SerializeField] int scorePoints = 100;
+
+    float shootCounter;
 
     // VFX
     [SerializeField] GameObject explosionVFX;
